@@ -1,4 +1,4 @@
-# [FTB StoneBlock 3](https://feed-the-beast.com/modpack/ftb_stoneblock_3) By FTB
+# [FTB StoneBlock 3](https://feed-the-beast.com/modpack/100-ftb_stoneblock_3) By FTB
 
 <!-- toc -->
 
