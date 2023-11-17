@@ -1,34 +1,43 @@
 #!/bin/bash
 
-set -x
+# Set script to fail on any errors
+set -e
 
 echo "Checking /data directory..."
 if ! [[ -w "/data" ]]; then
   echo "Directory is not writable, check permissions for /data/"
-  exit 66
+  exit 1
 fi
 
 echo "Checking and applying Environment Variables..."
 if [[ -z "$MODPACK_ID" || -z "$MODPACK_VER" ]]; then
   echo "You must set the Environment Variables MODPACK_ID and MODPACK_VER"
-  exit 9
+  exit 2
 fi
 
 cd /data
 
-if ! [[ "$EULA" = "false" ]] || grep -i true eula.txt; then
-  echo "eula=true" > eula.txt
+# EULA check logic
+if [[ "${EULA,,}" != "true" ]]; then
+  if grep -iq "true" eula.txt; then
+    echo "eula=true found in eula.txt, proceeding..."
+  else
+    echo "You must set the Environment Variable EULA to true."
+    exit 3
+  fi
 else
-  echo "You must set the Environment Variable EULA to true."
-  exit 9
+  echo "eula=true" > eula.txt
 fi
 
+# Update server properties
 if [[ -n "$MOTD" ]]; then
   sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
 fi
 if [[ -n "$LEVEL" ]]; then
   sed -i "/level-name\s*=/ c level-name=$LEVEL" /data/server.properties
 fi
+
+# Generate ops.txt and white-list.txt
 if [[ -n "$OPS" ]]; then
   echo "$OPS" | awk -v RS=, '{print}' > ops.txt
 fi
@@ -46,14 +55,15 @@ fi
 
 sed -i 's/server-port.*/server-port=25565/g' server.properties
 
-[[ -f run.sh ]] && chmod 755 run.sh
-[[ -f start.sh ]] && chmod 755 start.sh
-if [[ -f run.sh || -f start.sh ]]; then
+# Set execute permissions and run scripts
+if [[ -f run.sh ]] || [[ -f start.sh ]]; then
+  chmod 755 run.sh start.sh
   if [[ -f user_jvm_args.txt ]]; then
     echo "$JVM_OPTS" > user_jvm_args.txt
   fi
   [[ -f run.sh ]] && ./run.sh || ./start.sh
 else
+  echo "Neither run.sh nor start.sh found, proceeding with default setup..."
   rm -f forge-*-installer.jar
   FORGE_JAR=$(ls forge-*.jar)
 
