@@ -14,6 +14,11 @@
 
 <!-- tocstop -->
 
+## Important
+This Repository is primarily for my own use, but feel free to use it if you like.  I will not be providing support for this container, but feel free to open an issue if you find a bug. I thank [Goobaroo](https://github.com/Goobaroo) for the original work on this container.
+
+# Original Description:
+
 ## Description
 
 This container is primaryily built to run on an [Unraid](https://unraid.net) server, outside of that your milliage will vary.

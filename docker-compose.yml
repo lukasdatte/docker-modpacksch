@@ -1,0 +1,21 @@
+version: '3'
+services:
+  modpacks_ch:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: modpacks_ch
+    ports:
+      - "25565:25565"
+    environment:
+      - MODPACK_ID=100
+      - MODPACK_VER=6967
+      - EULA=true
+      - JVM_OPTS=-Xms4096m -Xmx6144m
+      - MOTD="Modpacks CH Server Powered by Docker"
+      - LEVEL=world
+      # Set Minecraft Operators (comma-separated list)
+      - OPS=OpPlayer1,OpPlayer2
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
