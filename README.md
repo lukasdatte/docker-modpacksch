@@ -41,7 +41,7 @@ The Docker container is configured via the `Dockerfile` and the inner workings a
      -e OPS="OpPlayer1,OpPlayer2" \
      -e ALLOWLIST="Player1,Player2" \
      -v </path/to/your/data:/data> \
-     your_docker_image
+     ghcr.io/lukasdatte/docker-modpacksch:main
 
 ## Options
 
