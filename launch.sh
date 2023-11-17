@@ -29,12 +29,18 @@ else
   echo "eula=true" > eula.txt
 fi
 
+# Ensure server.properties exists, create if not
+if [[ ! -f server.properties ]]; then
+  echo "Creating empty server.properties file..."
+  touch server.properties
+fi
+
 # Update server properties
 if [[ -n "$MOTD" ]]; then
-  sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
+  sed -i "/motd\s*=/ c motd=$MOTD" server.properties
 fi
 if [[ -n "$LEVEL" ]]; then
-  sed -i "/level-name\s*=/ c level-name=$LEVEL" /data/server.properties
+  sed -i "/level-name\s*=/ c level-name=$LEVEL" server.properties
 fi
 
 # Generate ops.txt and white-list.txt
@@ -57,7 +63,8 @@ sed -i 's/server-port.*/server-port=25565/g' server.properties
 
 # Set execute permissions and run scripts
 if [[ -f run.sh ]] || [[ -f start.sh ]]; then
-  chmod 755 run.sh start.sh
+  [[ -f run.sh ]] && chmod 755 run.sh
+  [[ -f start.sh ]] && chmod 755 start.sh
   if [[ -f user_jvm_args.txt ]]; then
     echo "$JVM_OPTS" > user_jvm_args.txt
   fi
